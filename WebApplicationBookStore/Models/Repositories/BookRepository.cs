@@ -31,6 +31,7 @@
         public void Delete(int id)
         {
             var book = Find(id);
+            books.Remove(book);
         }
 
         public Book Find(int id)
