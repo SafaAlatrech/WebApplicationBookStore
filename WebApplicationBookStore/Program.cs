@@ -1,7 +1,14 @@
+using WebApplicationBookStore.Models;
+using WebApplicationBookStore.Models.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddMvc();
+builder.Services.AddSingleton<IBookStoreRepository<Author>,AuthorRepository>();
+builder.Services.AddSingleton<IBookStoreRepository<Book>,BookRepository>();
+
 
 var app = builder.Build();
 
