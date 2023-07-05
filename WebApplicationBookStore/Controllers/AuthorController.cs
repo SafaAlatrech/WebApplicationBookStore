@@ -24,7 +24,8 @@ namespace WebApplicationBookStore.Controllers
         // GET: AuthorController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var authors = authorRepository?.Find(id);
+            return View(authors);
         }
 
         // GET: AuthorController/Create
