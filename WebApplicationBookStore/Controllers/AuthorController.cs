@@ -53,16 +53,18 @@ namespace WebApplicationBookStore.Controllers
         // GET: AuthorController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var authors = authorRepository?.Find(id);
+            return View(authors);
         }
 
         // POST: AuthorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Author author)
         {
             try
             {
+                authorRepository?.Update(id,author);
                 return RedirectToAction(nameof(Index));
             }
             catch
