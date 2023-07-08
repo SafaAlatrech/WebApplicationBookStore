@@ -15,8 +15,9 @@ namespace WebApplicationBookStore.Controllers
         }
         // GET: BookController
         public ActionResult Index()
-        {
-            return View();
+        { 
+            var books = bookRepository?.List();
+            return View(books);
         }
 
         // GET: BookController/Details/5
