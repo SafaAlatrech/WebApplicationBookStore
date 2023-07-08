@@ -53,16 +53,18 @@ namespace WebApplicationBookStore.Controllers
         // GET: AuthorController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var authors = authorRepository?.Find(id);
+            return View(authors);
         }
 
         // POST: AuthorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Author author)
         {
             try
             {
+                authorRepository?.Update(id,author);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -73,17 +75,19 @@ namespace WebApplicationBookStore.Controllers
 
         // GET: AuthorController/Delete/5
         public ActionResult Delete(int id)
-        {
-            return View();
+        { 
+            var authors = authorRepository?.Find(id);
+            return View(authors);
         }
 
         // POST: AuthorController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Author author)
         {
             try
             {
+                authorRepository?.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
