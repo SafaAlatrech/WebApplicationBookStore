@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 using WebApplicationBookStore.Models;
 using WebApplicationBookStore.Models.Repositories;
 using WebApplicationBookStore.ViewModels;
@@ -54,7 +55,7 @@ namespace WebApplicationBookStore.Controllers
                     Id = model.BookId,
                     Title = model.Title,
                     Description = model.Description,
-                    Author=author
+                    Author = author
                 };
                 bookRepository?.Add(book);
                 return RedirectToAction(nameof(Index));
@@ -68,7 +69,17 @@ namespace WebApplicationBookStore.Controllers
         // GET: BookController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var book = bookRepository?.Find(id);
+            var authorId = book.Author == null ? book.Author.Id = 0 :book.Author.Id;
+            var viewModel = new BookAuthorViewModel
+            {            
+                BookId = book.Id,
+                Title= book.Title,
+                Description= book.Description,
+                AuthorId = authorId,
+                Authors = authorRepository?.List().ToList(),    
+            };
+            return View(viewModel);
         }
 
         // POST: BookController/Edit/5
