@@ -10,15 +10,15 @@
             {
                 new Book
                 {
-                    Id = 1,Title="C# Programming",Description="No description"
+                    Id = 1,Title="C# Programming",Description="No description", Author = new Author{Id=1}
                 },
                 new Book
                 {
-                    Id = 2,Title="Java Programming",Description="No description"
+                    Id = 2,Title="Java Programming",Description="No description",Author = new Author{Id=2}
                 },
                 new Book
                 {
-                    Id = 3,Title="PHP Programming",Description="No description"
+                    Id = 3,Title="PHP Programming",Description="No description",Author = new Author{Id=3}
                 }
             };
         }
