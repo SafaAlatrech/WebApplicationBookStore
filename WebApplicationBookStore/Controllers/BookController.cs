@@ -117,17 +117,19 @@ namespace WebApplicationBookStore.Controllers
 
         // GET: BookController/Delete/5
         public ActionResult Delete(int id)
-        {
+        { 
+            var book = bookRepository?.Find(id);
             return View();
         }
 
         // POST: BookController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult ConfirmDelete(int id)
         {
             try
-            {
+            { 
+                bookRepository?.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
