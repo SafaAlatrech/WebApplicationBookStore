@@ -1,4 +1,6 @@
-﻿namespace WebApplicationBookStore.Models.Repositories
+﻿using static System.Reflection.Metadata.BlobBuilder;
+
+namespace WebApplicationBookStore.Models.Repositories
 {
     public class AuthorRepository : IBookStoreRepository<Author>
     { 
@@ -15,6 +17,7 @@
         }
         public void Add(Author entity)
         {
+            entity.Id = authors.Max(b => b.Id) + 1;
             authors.Add(entity);
         }
 
