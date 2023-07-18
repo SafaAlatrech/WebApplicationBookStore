@@ -37,7 +37,7 @@ namespace WebApplicationBookStore.Controllers
         {
             var model = new BookAuthorViewModel
             {
-                Authors = authorRepository?.List().ToList(),
+                Authors = FillSelectList()
             };
             return View(model);
         }
@@ -48,7 +48,17 @@ namespace WebApplicationBookStore.Controllers
         public ActionResult Create(BookAuthorViewModel model)
         {
             try
-            {
+            { 
+                if (model.AuthorId == -1) 
+                {
+                    ViewBag.Message = "Please select an another from the list !";
+                    var Vmodel = new BookAuthorViewModel
+                    {
+                        Authors = FillSelectList()
+                    };
+                   
+                    return View(Vmodel);
+                }
                 var author = authorRepository?.Find(model.AuthorId);
                 Book book = new Book
                 {
@@ -124,6 +134,14 @@ namespace WebApplicationBookStore.Controllers
             {
                 return View();
             }
+        }  
+
+        List<Author> FillSelectList() 
+        {
+           var authors = authorRepository.List().ToList();
+            authors.Insert(0, new Author { Id = -1, FullName = "---Please Select an authors---" });
+            return authors;
+        
         }
     }
 }
