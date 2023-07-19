@@ -47,47 +47,47 @@ namespace WebApplicationBookStore.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(BookAuthorViewModel model)
         {
-            try
-            { 
-                if (model.AuthorId == -1) 
-                {
-                    ViewBag.Message = "Please select an another from the list !";
-                    var Vmodel = new BookAuthorViewModel
-                    {
-                        Authors = FillSelectList()
-                    };
-                   
-                    return View(Vmodel);
-                }
-                var author = authorRepository?.Find(model.AuthorId);
-                Book book = new Book
-                {
-                    Id = model.BookId,
-                    Title = model.Title,
-                    Description = model.Description,
-                    Author = author
-                };
-                bookRepository?.Add(book);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+            if (ModelState.IsValid)
             {
-                return View();
+                try
+                {
+                    if (model.AuthorId == -1)
+                    {
+                        ViewBag.Message = "Please select an another from the list !";
+                        return View(GetAllAuthors());
+                    }
+                    var author = authorRepository?.Find(model.AuthorId);
+                    Book book = new Book
+                    {
+                        Id = model.BookId,
+                        Title = model.Title,
+                        Description = model.Description,
+                        Author = author
+                    };
+                    bookRepository?.Add(book);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    return View();
+                }
             }
+            ModelState.AddModelError("", "You have to fill all the required fields");
+            return View(GetAllAuthors());
         }
 
         // GET: BookController/Edit/5
         public ActionResult Edit(int id)
         {
             var book = bookRepository?.Find(id);
-            var authorId = book.Author == null ? book.Author.Id = 0 :book.Author.Id;
+            var authorId = book.Author == null ? book.Author.Id = 0 : book.Author.Id;
             var viewModel = new BookAuthorViewModel
-            {            
+            {
                 BookId = book.Id,
-                Title= book.Title,
-                Description= book.Description,
+                Title = book.Title,
+                Description = book.Description,
                 AuthorId = authorId,
-                Authors = authorRepository?.List().ToList(),    
+                Authors = authorRepository?.List().ToList(),
             };
             return View(viewModel);
         }
@@ -95,7 +95,7 @@ namespace WebApplicationBookStore.Controllers
         // POST: BookController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit( BookAuthorViewModel viewModel)
+        public ActionResult Edit(BookAuthorViewModel viewModel)
         {
             try
             {
@@ -104,9 +104,9 @@ namespace WebApplicationBookStore.Controllers
                 {
                     Title = viewModel.Title,
                     Description = viewModel.Description,
-                    Author= author, 
-                }; 
-                bookRepository?.Update(viewModel.BookId ,book);
+                    Author = author,
+                };
+                bookRepository?.Update(viewModel.BookId, book);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -117,7 +117,7 @@ namespace WebApplicationBookStore.Controllers
 
         // GET: BookController/Delete/5
         public ActionResult Delete(int id)
-        { 
+        {
             var book = bookRepository?.Find(id);
             return View();
         }
@@ -128,7 +128,7 @@ namespace WebApplicationBookStore.Controllers
         public ActionResult ConfirmDelete(int id)
         {
             try
-            { 
+            {
                 bookRepository?.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
@@ -136,14 +136,24 @@ namespace WebApplicationBookStore.Controllers
             {
                 return View();
             }
-        }  
+        }
 
-        List<Author> FillSelectList() 
+        List<Author> FillSelectList()
         {
-           var authors = authorRepository.List().ToList();
+            var authors = authorRepository.List().ToList();
             authors.Insert(0, new Author { Id = -1, FullName = "---Please Select an authors---" });
             return authors;
-        
+
+        }
+
+        BookAuthorViewModel GetAllAuthors()
+        {
+            var Vmodel = new BookAuthorViewModel
+            {
+                Authors = FillSelectList()
+            };
+
+            return Vmodel;
         }
     }
 }
