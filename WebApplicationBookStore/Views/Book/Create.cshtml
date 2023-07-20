@@ -14,7 +14,7 @@
         {
             <h5 class="alert alert-danger">@ViewBag.Message</h5>
         }
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -22,9 +22,9 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input type="File" name="File" asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="File" class="control-label"></label>
+                <input type="File" name="File" asp-for="File" class="form-control" />
+                <span asp-validation-for="File" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="File" class="control-label"></label>

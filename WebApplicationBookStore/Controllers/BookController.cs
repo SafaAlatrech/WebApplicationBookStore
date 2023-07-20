@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApplicationBookStore.Models;
 using WebApplicationBookStore.Models.Repositories;
 using WebApplicationBookStore.ViewModels;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace WebApplicationBookStore.Controllers
 {
@@ -11,12 +10,16 @@ namespace WebApplicationBookStore.Controllers
     {
         private readonly IBookStoreRepository<Book>? bookRepository;
         private readonly IBookStoreRepository<Author>? authorRepository;
+        [Obsolete]
+        private readonly IHostingEnvironment hosting;
 
-
-        public BookController(IBookStoreRepository<Book> bookRepository, IBookStoreRepository<Author> authorRepository)
+        [Obsolete]
+        public BookController(IBookStoreRepository<Book> bookRepository, IBookStoreRepository<Author> authorRepository,
+            Microsoft.AspNetCore.Hosting.IHostingEnvironment hosting)
         {
             this.bookRepository = bookRepository;
             this.authorRepository = authorRepository;
+            this.hosting = hosting;
         }
         // GET: BookController
         public ActionResult Index()
@@ -45,12 +48,23 @@ namespace WebApplicationBookStore.Controllers
         // POST: BookController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Obsolete]
         public ActionResult Create(BookAuthorViewModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    string fileName = string.Empty;
+                   
+                    if (model.File != null)
+                    {
+                        string uploads = Path.Combine(hosting.WebRootPath, "uploads");
+                        fileName = model.File.FileName;
+                        string fullPath = Path.Combine(uploads, fileName);
+                        model.File.CopyTo(new FileStream (fullPath,FileMode.Create));
+                    }
+
                     if (model.AuthorId == -1)
                     {
                         ViewBag.Message = "Please select an another from the list !";
@@ -62,7 +76,8 @@ namespace WebApplicationBookStore.Controllers
                         Id = model.BookId,
                         Title = model.Title,
                         Description = model.Description,
-                        Author = author
+                        Author = author,
+                        ImageURL = fileName
                     };
                     bookRepository?.Add(book);
                     return RedirectToAction(nameof(Index));
