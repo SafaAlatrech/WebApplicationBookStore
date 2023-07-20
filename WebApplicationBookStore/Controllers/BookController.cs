@@ -103,6 +103,7 @@ namespace WebApplicationBookStore.Controllers
                 Description = book.Description,
                 AuthorId = authorId,
                 Authors = authorRepository?.List().ToList(),
+                ImageURL = book.ImageURL,
             };
             return View(viewModel);
         }
