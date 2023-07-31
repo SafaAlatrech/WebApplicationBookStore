@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 using WebApplicationBookStore.Models;
 using WebApplicationBookStore.Models.Repositories;
 using WebApplicationBookStore.ViewModels;
@@ -56,13 +57,13 @@ namespace WebApplicationBookStore.Controllers
                 try
                 {
                     string fileName = string.Empty;
-                   
+
                     if (model.File != null)
                     {
                         string uploads = Path.Combine(hosting.WebRootPath, "uploads");
                         fileName = model.File.FileName;
                         string fullPath = Path.Combine(uploads, fileName);
-                        model.File.CopyTo(new FileStream (fullPath,FileMode.Create));
+                        model.File.CopyTo(new FileStream(fullPath, FileMode.Create));
                     }
 
                     if (model.AuthorId == -1)
@@ -103,6 +104,7 @@ namespace WebApplicationBookStore.Controllers
                 Description = book.Description,
                 AuthorId = authorId,
                 Authors = authorRepository?.List().ToList(),
+                ImageURL = book.ImageURL,
             };
             return View(viewModel);
         }
@@ -114,12 +116,32 @@ namespace WebApplicationBookStore.Controllers
         {
             try
             {
+                string fileName = string.Empty;
+
+                if (viewModel.File != null)
+                {
+                    string uploads = Path.Combine(hosting.WebRootPath, "uploads");
+                    fileName = viewModel.File.FileName;
+                    string fullPath = Path.Combine(uploads, fileName);
+
+                    // Delete the old File
+                    string oldFileName = bookRepository.Find(viewModel.BookId).ImageURL;
+                    string fullOldFile = Path.Combine(uploads, oldFileName);
+
+                    if (fullPath != fullOldFile) 
+                    {
+                        System.IO.File.Delete(fullOldFile);
+                        // Save the new File
+                        viewModel.File.CopyTo(new FileStream(fullPath, FileMode.Create));
+                    }
+                }
                 var author = authorRepository?.Find(viewModel.AuthorId);
                 Book book = new Book
                 {
                     Title = viewModel.Title,
                     Description = viewModel.Description,
                     Author = author,
+                    ImageURL = fileName
                 };
                 bookRepository?.Update(viewModel.BookId, book);
                 return RedirectToAction(nameof(Index));

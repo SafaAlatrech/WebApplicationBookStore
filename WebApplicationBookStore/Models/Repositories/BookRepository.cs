@@ -10,15 +10,27 @@
             {
                 new Book
                 {
-                    Id = 1,Title="C# Programming",Description="No description", Author = new Author{Id=1}
+                    Id = 1,
+                    Title="C# Programming",
+                    Description="No description", 
+                    ImageURL="csharp.png",
+                    Author = new Author{Id=1}
                 },
                 new Book
                 {
-                    Id = 2,Title="Java Programming",Description="No description",Author = new Author{Id=2}
+                    Id = 2,
+                    Title="Java Programming",
+                    Description="No description",
+                    ImageURL="java.png",
+                    Author = new Author{Id=2}
                 },
                 new Book
                 {
-                    Id = 3,Title="PHP Programming",Description="No description",Author = new Author{Id=3}
+                    Id = 3,
+                    Title="PHP Programming",
+                    Description="No description",
+                    ImageURL="Php.png",
+                    Author = new Author{Id=3}
                 }
             };
         }
@@ -52,6 +64,7 @@
             book.Title = newBook.Title;
             book.Author = newBook.Author;
             book.Description = newBook.Description;
+            book.ImageURL = newBook.ImageURL;
         }
     }
 }
