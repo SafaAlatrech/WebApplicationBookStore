@@ -9,8 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddMvc();
-builder.Services.AddSingleton<IBookStoreRepository<Author>, AuthorRepository>();
-builder.Services.AddSingleton<IBookStoreRepository<Book>, BookRepository>();
+builder.Services.AddScoped<IBookStoreRepository<Author>, AuthorDbRepository>();
+builder.Services.AddScoped<IBookStoreRepository<Book>, BookDbRepositorycs>();
 builder.Services.AddControllers();
 //builder.Services.AddDbContext<BookStoreDbContext>(options =>
 //{
