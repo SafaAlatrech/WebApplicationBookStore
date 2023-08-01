@@ -1,4 +1,6 @@
-﻿namespace WebApplicationBookStore.Models.Repositories
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace WebApplicationBookStore.Models.Repositories
 {
     public class BookDbRepositorycs : IBookStoreRepository<Book>
     {
@@ -26,13 +28,13 @@
 
         public Book Find(int id)
         {
-            var book = db.Books.SingleOrDefault(b => b.Id == id);
+            var book = db.Books.Include(a => a.Author).SingleOrDefault(b => b.Id == id);
             return book;
         }
 
         public IList<Book> List()
         {
-            return db.Books.ToList();
+            return db.Books.Include(a=>a.Author).ToList();
         }
 
         public void Update(int id, Book newBook)
