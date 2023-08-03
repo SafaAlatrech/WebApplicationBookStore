@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Constraints;
 using System.Reflection;
 using WebApplicationBookStore.Models;
 using WebApplicationBookStore.Models.Repositories;
@@ -56,15 +57,7 @@ namespace WebApplicationBookStore.Controllers
             {
                 try
                 {
-                    string fileName = string.Empty;
-
-                    if (model.File != null)
-                    {
-                        string uploads = Path.Combine(hosting.WebRootPath, "uploads");
-                        fileName = model.File.FileName;
-                        string fullPath = Path.Combine(uploads, fileName);
-                        model.File.CopyTo(new FileStream(fullPath, FileMode.Create));
-                    }
+                    string fileName = UploadFile(model.File) ?? string.Empty;
 
                     if (model.AuthorId == -1)
                     {
@@ -128,7 +121,7 @@ namespace WebApplicationBookStore.Controllers
                     string oldFileName = viewModel.ImageURL;
                     string fullOldFile = Path.Combine(uploads, oldFileName);
 
-                    if (fullPath != fullOldFile) 
+                    if (fullPath != fullOldFile)
                     {
                         System.IO.File.Delete(fullOldFile);
                         // Save the new File
@@ -137,7 +130,8 @@ namespace WebApplicationBookStore.Controllers
                 }
                 var author = authorRepository?.Find(viewModel.AuthorId);
                 Book book = new Book
-                {   Id = viewModel.BookId,
+                {
+                    Id = viewModel.BookId,
                     Title = viewModel.Title,
                     Description = viewModel.Description,
                     Author = author,
@@ -146,7 +140,7 @@ namespace WebApplicationBookStore.Controllers
                 bookRepository?.Update(viewModel.BookId, book);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return View();
             }
@@ -191,6 +185,20 @@ namespace WebApplicationBookStore.Controllers
             };
 
             return Vmodel;
+        } 
+
+        string UploadFile(IFormFile file)
+        {
+            if (file != null)
+            {
+                string uploads = Path.Combine(hosting.WebRootPath, "uploads");
+                string fullPath = Path.Combine(uploads, file.FileName);
+                file.CopyTo(new FileStream(fullPath, FileMode.Create));
+
+                return file.FileName;
+
+            }
+            return null;
         }
     }
 }
