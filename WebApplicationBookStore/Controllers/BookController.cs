@@ -109,7 +109,8 @@ namespace WebApplicationBookStore.Controllers
         {
             try
             {
-                string fileName = string.Empty;
+                string fileName = UploadFile(viewModel.File, viewModel.ImageURL);
+
 
                 if (viewModel.File != null)
                 {
@@ -200,5 +201,29 @@ namespace WebApplicationBookStore.Controllers
             }
             return null;
         }
+
+        string UploadFile(IFormFile file, string ImageURL)
+        {
+
+            if (file != null)
+            {
+                string uploads = Path.Combine(hosting.WebRootPath, "uploads");
+                string newPath = Path.Combine(uploads, file.FileName);
+
+                // Delete the old File
+                string oldPath = Path.Combine(uploads, ImageURL);
+
+                if (oldPath != newPath)
+                {
+                    System.IO.File.Delete(oldPath);
+                    // Save the new File
+                    file.CopyTo(new FileStream(newPath, FileMode.Create));
+                } 
+                return file.FileName;
+            }
+            return ImageURL;
+
+        }
+
     }
 }
