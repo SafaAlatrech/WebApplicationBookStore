@@ -125,7 +125,7 @@ namespace WebApplicationBookStore.Controllers
                     string fullPath = Path.Combine(uploads, fileName);
 
                     // Delete the old File
-                    string oldFileName = bookRepository.Find(viewModel.BookId).ImageURL;
+                    string oldFileName = viewModel.ImageURL;
                     string fullOldFile = Path.Combine(uploads, oldFileName);
 
                     if (fullPath != fullOldFile) 
@@ -137,7 +137,7 @@ namespace WebApplicationBookStore.Controllers
                 }
                 var author = authorRepository?.Find(viewModel.AuthorId);
                 Book book = new Book
-                {
+                {   Id = viewModel.BookId,
                     Title = viewModel.Title,
                     Description = viewModel.Description,
                     Author = author,
@@ -146,7 +146,7 @@ namespace WebApplicationBookStore.Controllers
                 bookRepository?.Update(viewModel.BookId, book);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex) 
             {
                 return View();
             }

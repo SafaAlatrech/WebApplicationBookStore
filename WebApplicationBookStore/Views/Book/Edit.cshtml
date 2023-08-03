@@ -33,6 +33,7 @@
                 <span asp-validation-for="File" class="text-danger"></span>
                 <img src="~/lib/uploads/@Model.ImageURL" style="width:124px" class="img-thumbnail" />
             </div>
+            <input type="hidden" asp-for="ImageURL" class="form-control" />
             <div class="form-group">
                 <label asp-for="AuthorId" class="control-label"></label>
                 <select asp-for="AuthorId" class="form-control" asp-items="@(new SelectList(Model.Authors, "Id","FullName"))"></select>
